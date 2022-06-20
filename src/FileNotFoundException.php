@@ -2,6 +2,6 @@
 
 namespace Minicli;
 
-class FileNotFoundException extends \Exception {
-
+class FileNotFoundException extends \Exception
+{
 }
