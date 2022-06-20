@@ -17,7 +17,7 @@ Install Stencil via Composer:
 composer require minicli/stencil
 ```
 
-Set up a directory in your project to hold your stencils:
+Set up a directory within your project to hold your stencils:
 
 ```shell
 mkdir stencils
@@ -34,7 +34,7 @@ Create a new `.tpl` file with some variables:
 My name is {{ name }} and I am a {{ description }}.
 ```
 
-From your project, instantiate a new Stencil, passing along the stencils directory you set up:
+From your project, instantiate a new Stencil, passing along the stencils directory you set up. Then, call the `applyTemplate` method with an array containing your values:
 
 ```php
 <?php
@@ -54,3 +54,5 @@ string(92) "## This is my Template
 
 My name is Stencil and I am a minimalist, dummy template generator.."
 ```
+## Dependencies
+Stencil has only testing dependencies.
