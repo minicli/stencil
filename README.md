@@ -9,9 +9,16 @@ Stencils are like lightweight templates with no advanced functionality (so it's 
 
 If you are looking for a templating system for front-end views, this is not it! Go check [Twig](https://twig.symfony.com/). Stencil is useful for generating skeleton content (such as to auto-generate classes, Markdown docs and other files following a certain structure).
 
+## Dependencies
+Stencil is a tiny standalone library that has only testing dependencies.
+
 ## Usage
 
-Install Stencil via Composer:
+### Within Minicli
+If you want to use Stencil within a Minicli app, you should have a look at the [Minicli Stencil command](https://github.com/minicli/command-stencil) that contains a basic implementation of a command using Stencil to generate documents based on templates. Check that repo for usage instructions.
+
+### Standalone
+For more freedom to include Stencil on your codebase, install standalone Stencil via Composer:
 
 ```shell
 composer require minicli/stencil
@@ -54,5 +61,26 @@ string(92) "## This is my Template
 
 My name is Stencil and I am a minimalist, dummy template generator.."
 ```
-## Dependencies
-Stencil has only testing dependencies.
+
+## Querying templates for variables
+
+You can also obtain the variables set within a template in order to build your array of values in a step-by-step way, such as interactively via command-line prompts.
+
+This is an example code that collects variables from a Stencil template and then prompts users for each variable found, returning an array that can then be used with `$stencil->applyTemplate()`:
+
+```php
+
+$stencil = new Stencil(__DIR__ . '/stencils');
+$template = 'mytemplate';
+$values = [];
+$variables = $stencil->scanTemplateVars($template);
+
+echo "Building template $template\n";
+foreach ($variables as $variable) {
+    echo ucfirst($variable);
+    $values[$variable] = readline(': ');
+}
+
+echo $stencil->applyTemplate($template, $values);
+
+```
