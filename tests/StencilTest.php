@@ -19,8 +19,18 @@ it('parses template', function () {
     ];
 
     $parsedContent = $stencil->applyTemplate('mytemplate', $values);
-    var_dump($parsedContent);
+
     expect($parsedContent)->toBeString();
     $this->assertStringContainsString($values['name'], $parsedContent);
     $this->assertStringContainsString($values['description'], $parsedContent);
+});
+
+it('obtains list of template variables', function () {
+    $stencil = getStencil();
+    $variables = $stencil->scanTemplateVars('mytemplate');
+
+    expect($variables)
+        ->toBeArray()
+        ->toContain('name')
+        ->toContain('description');
 });

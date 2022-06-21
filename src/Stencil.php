@@ -16,18 +16,39 @@ class Stencil
      */
     public function applyTemplate(string $templateName, array $variables = []): string
     {
-        $templateFile = $this->stencilDir . '/' . $templateName . '.tpl';
-
-        if (!is_file($templateFile)) {
-            throw new FileNotFoundException("Template file not found.");
-        }
-
-        $template = file_get_contents($templateFile);
-
+        $template = $this->getTemplate($templateName);
         foreach ($variables as $variableName => $variableValue) {
             $template = str_replace("{{ $variableName }}", $variableValue, $template);
         }
 
         return $template;
+    }
+
+    /**
+     * @param string $templateName
+     * @return mixed
+     * @throws FileNotFoundException
+     */
+    public function scanTemplateVars(string $templateName): array
+    {
+        $template = $this->getTemplate($templateName);
+        preg_match_all('/\{\{\s([a-zA-z0-9-_]*\b)\s}}/', $template, $out);
+        return $out[1];
+    }
+
+    /**
+     * @param string $template
+     * @return string
+     * @throws FileNotFoundException
+     */
+    public function getTemplate(string $template): string
+    {
+        $templateFile = $this->stencilDir . '/' . $template . '.tpl';
+
+        if (!is_file($templateFile)) {
+            throw new FileNotFoundException("Template file not found.");
+        }
+
+        return file_get_contents($templateFile);
     }
 }
