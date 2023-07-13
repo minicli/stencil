@@ -43,5 +43,7 @@ expect()->extend('toContain', function (string $string) {
 
 function getStencil(): Stencil
 {
-    return new Stencil(__DIR__ . '/Assets');
+    $stencil = new Stencil(__DIR__ . '/Assets');
+    $stencil->fallbackTo([__DIR__ . '/Assets/Fallback']);
+    return $stencil;
 }

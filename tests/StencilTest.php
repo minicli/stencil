@@ -1,13 +1,22 @@
 <?php
 
+use Minicli\FileNotFoundException;
+
 it('sets the template dir', function () {
     $stencil = getStencil();
     expect($stencil->stencilDir)->toBeString();
 });
 
+it('falls back to secondary tpl dir when tpl not found in default location', function () {
+    $stencil = getStencil();
+    $parsedContent = $stencil->applyTemplate('othertemplate', []);
+    expect($parsedContent)->toBeString();
+    $this->assertStringContainsString("This is my Other Template", $parsedContent);
+});
+
 it('throws exception if template not found', function () {
     $stencil = getStencil();
-    $this->expectException(\Minicli\FileNotFoundException::class);
+    $this->expectException(FileNotFoundException::class);
     $stencil->applyTemplate('notfound', []);
 });
 

@@ -5,10 +5,21 @@ namespace Minicli;
 class Stencil
 {
     public string $stencilDir;
+    public array $fallbackDirs = [];
 
     public function __construct(string $stencilDir)
     {
         $this->stencilDir = $stencilDir;
+    }
+
+    /**
+     * Additional template dirs to look for
+     * @param array $fallbackDirs
+     * @return void
+     */
+    public function fallbackTo(array $fallbackDirs)
+    {
+        $this->fallbackDirs = $fallbackDirs;
     }
 
     /**
@@ -46,9 +57,21 @@ class Stencil
         $templateFile = $this->stencilDir . '/' . $template . '.tpl';
 
         if (!is_file($templateFile)) {
-            throw new FileNotFoundException("Template file not found.");
+            $templateFile = $this->locateFallbackTemplate($template);
         }
 
         return file_get_contents($templateFile);
+    }
+
+    public function locateFallbackTemplate(string $template): string
+    {
+        foreach ($this->fallbackDirs as $fallbackDir) {
+            $templateFile = $fallbackDir . '/' . $template . '.tpl';
+            if (is_file($templateFile)) {
+                return $templateFile;
+            }
+        }
+
+        throw new FileNotFoundException("Template file not found.");
     }
 }
